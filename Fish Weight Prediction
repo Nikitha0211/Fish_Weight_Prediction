@@ -1,0 +1,970 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "442bcb13",
+   "metadata": {
+    "papermill": {
+     "duration": 0.005654,
+     "end_time": "2024-06-27T16:47:19.768739",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:19.763085",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "**Fish Weight Prediction**\n",
+    "\n",
+    "With a dataset of fish species, with some of it characteristic like it vertical, diagonal, length, height, and width. We will try to predict the weight of the fish based on their characteristic. We will use Linear Regression Method to see whether the weight of the fish related to their characteristic.\n",
+    "\n",
+    "Species: Species name of fish\n",
+    "\n",
+    "Weight: Weight of fish in gram\n",
+    "\n",
+    "Length1: Vertical length in cm\n",
+    "\n",
+    "Length2: Diagonal length in cm\n",
+    "\n",
+    "Length3: Cross length in cm\n",
+    "\n",
+    "Height: Height in cm\n",
+    "\n",
+    "Width: Diagonal width in cm"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "96c7745e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:19.782384Z",
+     "iopub.status.busy": "2024-06-27T16:47:19.781749Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.725398Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.723950Z"
+    },
+    "papermill": {
+     "duration": 0.954131,
+     "end_time": "2024-06-27T16:47:20.728768",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:19.774637",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 1 : import library\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "d7fe6c62",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.744348Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.742855Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.766739Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.765423Z"
+    },
+    "papermill": {
+     "duration": 0.033941,
+     "end_time": "2024-06-27T16:47:20.769427",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.735486",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 2: Import Data\n",
+    "fish = pd.read_csv('/kaggle/input/fish-weight-predictiondataset/Fish_Weight_PredictionDataset.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "c6fb3b8b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.781954Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.781537Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.812798Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.811532Z"
+    },
+    "papermill": {
+     "duration": 0.04154,
+     "end_time": "2024-06-27T16:47:20.816267",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.774727",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Category</th>\n",
+       "      <th>Species</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Height</th>\n",
+       "      <th>Width</th>\n",
+       "      <th>Length1</th>\n",
+       "      <th>Length2</th>\n",
+       "      <th>Length3</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Bream</td>\n",
+       "      <td>242.0</td>\n",
+       "      <td>11.5200</td>\n",
+       "      <td>4.0200</td>\n",
+       "      <td>23.2</td>\n",
+       "      <td>25.4</td>\n",
+       "      <td>30.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Bream</td>\n",
+       "      <td>290.0</td>\n",
+       "      <td>12.4800</td>\n",
+       "      <td>4.3056</td>\n",
+       "      <td>24.0</td>\n",
+       "      <td>26.3</td>\n",
+       "      <td>31.2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Bream</td>\n",
+       "      <td>340.0</td>\n",
+       "      <td>12.3778</td>\n",
+       "      <td>4.6961</td>\n",
+       "      <td>23.9</td>\n",
+       "      <td>26.5</td>\n",
+       "      <td>31.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Bream</td>\n",
+       "      <td>363.0</td>\n",
+       "      <td>12.7300</td>\n",
+       "      <td>4.4555</td>\n",
+       "      <td>26.3</td>\n",
+       "      <td>29.0</td>\n",
+       "      <td>33.5</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>1</td>\n",
+       "      <td>Bream</td>\n",
+       "      <td>430.0</td>\n",
+       "      <td>12.4440</td>\n",
+       "      <td>5.1340</td>\n",
+       "      <td>26.5</td>\n",
+       "      <td>29.0</td>\n",
+       "      <td>34.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Category Species  Weight   Height   Width  Length1  Length2  Length3\n",
+       "0         1   Bream   242.0  11.5200  4.0200     23.2     25.4     30.0\n",
+       "1         1   Bream   290.0  12.4800  4.3056     24.0     26.3     31.2\n",
+       "2         1   Bream   340.0  12.3778  4.6961     23.9     26.5     31.1\n",
+       "3         1   Bream   363.0  12.7300  4.4555     26.3     29.0     33.5\n",
+       "4         1   Bream   430.0  12.4440  5.1340     26.5     29.0     34.0"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "fish.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "e531c8b3",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.830603Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.830163Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.858576Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.857338Z"
+    },
+    "papermill": {
+     "duration": 0.039253,
+     "end_time": "2024-06-27T16:47:20.861183",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.821930",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 159 entries, 0 to 158\n",
+      "Data columns (total 8 columns):\n",
+      " #   Column    Non-Null Count  Dtype  \n",
+      "---  ------    --------------  -----  \n",
+      " 0   Category  159 non-null    int64  \n",
+      " 1   Species   159 non-null    object \n",
+      " 2   Weight    159 non-null    float64\n",
+      " 3   Height    159 non-null    float64\n",
+      " 4   Width     159 non-null    float64\n",
+      " 5   Length1   159 non-null    float64\n",
+      " 6   Length2   159 non-null    float64\n",
+      " 7   Length3   159 non-null    float64\n",
+      "dtypes: float64(6), int64(1), object(1)\n",
+      "memory usage: 10.1+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "fish.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "7cbb9835",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.875451Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.875051Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.913588Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.911340Z"
+    },
+    "papermill": {
+     "duration": 0.049141,
+     "end_time": "2024-06-27T16:47:20.916187",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.867046",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Category</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Height</th>\n",
+       "      <th>Width</th>\n",
+       "      <th>Length1</th>\n",
+       "      <th>Length2</th>\n",
+       "      <th>Length3</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>159.000000</td>\n",
+       "      <td>159.000000</td>\n",
+       "      <td>159.000000</td>\n",
+       "      <td>159.000000</td>\n",
+       "      <td>159.000000</td>\n",
+       "      <td>159.000000</td>\n",
+       "      <td>159.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>3.264151</td>\n",
+       "      <td>398.326415</td>\n",
+       "      <td>8.970994</td>\n",
+       "      <td>4.417486</td>\n",
+       "      <td>26.247170</td>\n",
+       "      <td>28.415723</td>\n",
+       "      <td>31.227044</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>1.704249</td>\n",
+       "      <td>357.978317</td>\n",
+       "      <td>4.286208</td>\n",
+       "      <td>1.685804</td>\n",
+       "      <td>9.996441</td>\n",
+       "      <td>10.716328</td>\n",
+       "      <td>11.610246</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>1.728400</td>\n",
+       "      <td>1.047600</td>\n",
+       "      <td>7.500000</td>\n",
+       "      <td>8.400000</td>\n",
+       "      <td>8.800000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>2.000000</td>\n",
+       "      <td>120.000000</td>\n",
+       "      <td>5.944800</td>\n",
+       "      <td>3.385650</td>\n",
+       "      <td>19.050000</td>\n",
+       "      <td>21.000000</td>\n",
+       "      <td>23.150000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>3.000000</td>\n",
+       "      <td>273.000000</td>\n",
+       "      <td>7.786000</td>\n",
+       "      <td>4.248500</td>\n",
+       "      <td>25.200000</td>\n",
+       "      <td>27.300000</td>\n",
+       "      <td>29.400000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>4.500000</td>\n",
+       "      <td>650.000000</td>\n",
+       "      <td>12.365900</td>\n",
+       "      <td>5.584500</td>\n",
+       "      <td>32.700000</td>\n",
+       "      <td>35.500000</td>\n",
+       "      <td>39.650000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>7.000000</td>\n",
+       "      <td>1650.000000</td>\n",
+       "      <td>18.957000</td>\n",
+       "      <td>8.142000</td>\n",
+       "      <td>59.000000</td>\n",
+       "      <td>63.400000</td>\n",
+       "      <td>68.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "         Category       Weight      Height       Width     Length1  \\\n",
+       "count  159.000000   159.000000  159.000000  159.000000  159.000000   \n",
+       "mean     3.264151   398.326415    8.970994    4.417486   26.247170   \n",
+       "std      1.704249   357.978317    4.286208    1.685804    9.996441   \n",
+       "min      1.000000     0.000000    1.728400    1.047600    7.500000   \n",
+       "25%      2.000000   120.000000    5.944800    3.385650   19.050000   \n",
+       "50%      3.000000   273.000000    7.786000    4.248500   25.200000   \n",
+       "75%      4.500000   650.000000   12.365900    5.584500   32.700000   \n",
+       "max      7.000000  1650.000000   18.957000    8.142000   59.000000   \n",
+       "\n",
+       "          Length2     Length3  \n",
+       "count  159.000000  159.000000  \n",
+       "mean    28.415723   31.227044  \n",
+       "std     10.716328   11.610246  \n",
+       "min      8.400000    8.800000  \n",
+       "25%     21.000000   23.150000  \n",
+       "50%     27.300000   29.400000  \n",
+       "75%     35.500000   39.650000  \n",
+       "max     63.400000   68.000000  "
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "fish.describe()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "70fd6d3c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.930614Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.930186Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.935979Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.934515Z"
+    },
+    "papermill": {
+     "duration": 0.01623,
+     "end_time": "2024-06-27T16:47:20.938709",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.922479",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 3 : define target (y) and features (X)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "1301ad02",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.952557Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.952144Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.959402Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.958355Z"
+    },
+    "papermill": {
+     "duration": 0.016753,
+     "end_time": "2024-06-27T16:47:20.961626",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.944873",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['Category', 'Species', 'Weight', 'Height', 'Width', 'Length1',\n",
+       "       'Length2', 'Length3'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "fish.columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "f18e44b0",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.975889Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.975512Z",
+     "iopub.status.idle": "2024-06-27T16:47:20.980517Z",
+     "shell.execute_reply": "2024-06-27T16:47:20.979431Z"
+    },
+    "papermill": {
+     "duration": 0.014785,
+     "end_time": "2024-06-27T16:47:20.982801",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.968016",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "y = fish['Weight']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "f644ff04",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:20.997354Z",
+     "iopub.status.busy": "2024-06-27T16:47:20.996713Z",
+     "iopub.status.idle": "2024-06-27T16:47:21.005333Z",
+     "shell.execute_reply": "2024-06-27T16:47:21.004033Z"
+    },
+    "papermill": {
+     "duration": 0.019099,
+     "end_time": "2024-06-27T16:47:21.008196",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:20.989097",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "X = fish[['Category','Height', 'Width', 'Length1',\n",
+    "       'Length2', 'Length3']]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "0799ab98",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:21.021924Z",
+     "iopub.status.busy": "2024-06-27T16:47:21.021563Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.372668Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.371482Z"
+    },
+    "papermill": {
+     "duration": 1.361344,
+     "end_time": "2024-06-27T16:47:22.375491",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:21.014147",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 4 : train test split\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X,y, train_size=0.7, random_state=2529)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "d432e3c1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.390416Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.390017Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.397322Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.396216Z"
+    },
+    "papermill": {
+     "duration": 0.017555,
+     "end_time": "2024-06-27T16:47:22.399425",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.381870",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "((111, 6), (48, 6), (111,), (48,))"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# check shape of train and test sample\n",
+    "X_train.shape, X_test.shape, y_train.shape, y_test.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "5ced5628",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.413395Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.413007Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.513760Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.512537Z"
+    },
+    "papermill": {
+     "duration": 0.111286,
+     "end_time": "2024-06-27T16:47:22.516664",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.405378",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 5 : select model\n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "model = LinearRegression()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "bf34da7a",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.531952Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.531517Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.563924Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.562687Z"
+    },
+    "papermill": {
+     "duration": 0.04287,
+     "end_time": "2024-06-27T16:47:22.566220",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.523350",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: \"▸\";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: \"▾\";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: \"\";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id=\"sk-container-id-1\" class=\"sk-top-container\"><div class=\"sk-text-repr-fallback\"><pre>LinearRegression()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class=\"sk-container\" hidden><div class=\"sk-item\"><div class=\"sk-estimator sk-toggleable\"><input class=\"sk-toggleable__control sk-hidden--visually\" id=\"sk-estimator-id-1\" type=\"checkbox\" checked><label for=\"sk-estimator-id-1\" class=\"sk-toggleable__label sk-toggleable__label-arrow\">LinearRegression</label><div class=\"sk-toggleable__content\"><pre>LinearRegression()</pre></div></div></div></div></div>"
+      ],
+      "text/plain": [
+       "LinearRegression()"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Step 6 : train or fit model\n",
+    "model.fit(X_train,y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "1cfae1e5",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.581371Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.580942Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.588939Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.587185Z"
+    },
+    "papermill": {
+     "duration": 0.018696,
+     "end_time": "2024-06-27T16:47:22.591295",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.572599",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "-684.4235918478537"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "model.intercept_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "a2f612e1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.607154Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.606157Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.613463Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.612364Z"
+    },
+    "papermill": {
+     "duration": 0.018323,
+     "end_time": "2024-06-27T16:47:22.616019",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.597696",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 35.19634977,  52.19372157, -37.13869125,  11.2218449 ,\n",
+       "        78.11233002, -59.11783139])"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "model.coef_"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "bc697f61",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.633366Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.631941Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.639675Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.638564Z"
+    },
+    "papermill": {
+     "duration": 0.019463,
+     "end_time": "2024-06-27T16:47:22.642111",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.622648",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 7 : predict model\n",
+    "y_pred = model.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "46899ee1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.658796Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.658385Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.666796Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.665617Z"
+    },
+    "papermill": {
+     "duration": 0.020556,
+     "end_time": "2024-06-27T16:47:22.669236",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.648680",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([ 475.93351307,  525.81910195,   77.63275849,  881.10235121,\n",
+       "        160.9685664 ,  255.94371856,  361.87029932,  358.87068094,\n",
+       "        499.83411068, -150.07834151, -115.91810869,  428.65470115,\n",
+       "        114.67533404,  812.51385122,  586.5071178 ,  273.38510858,\n",
+       "        579.63900729,  225.18126845,  639.26068037,   85.00820599,\n",
+       "        136.92159041,  -87.7778087 ,  629.97231046,  732.63097812,\n",
+       "        859.8720695 , -166.76928607,  342.04209934,  722.92198147,\n",
+       "        321.44827179,  787.98248357,  486.93194673,  541.89982795,\n",
+       "        376.74813045,  624.81211202, -170.11945033,  917.76513801,\n",
+       "        792.26439518,  -21.15655005,  300.24921659,  914.07325473,\n",
+       "        621.05636286,  934.17373986,  676.85479574,  653.92304403,\n",
+       "        615.51226767,  336.61090622,  505.75519147,  -33.53283763])"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_pred"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "ac5d5aaf",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.684821Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.684417Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.689255Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.688136Z"
+    },
+    "papermill": {
+     "duration": 0.015649,
+     "end_time": "2024-06-27T16:47:22.691573",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.675924",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Step 8 : model accuracy\n",
+    "from sklearn.metrics import mean_absolute_error, r2_score"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "ebedb96c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.708470Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.708084Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.715853Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.714828Z"
+    },
+    "papermill": {
+     "duration": 0.019607,
+     "end_time": "2024-06-27T16:47:22.718307",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.698700",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "99.58910366731813"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "mean_absolute_error(y_test,y_pred)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "b443776b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2024-06-27T16:47:22.735255Z",
+     "iopub.status.busy": "2024-06-27T16:47:22.734480Z",
+     "iopub.status.idle": "2024-06-27T16:47:22.742873Z",
+     "shell.execute_reply": "2024-06-27T16:47:22.741743Z"
+    },
+    "papermill": {
+     "duration": 0.020041,
+     "end_time": "2024-06-27T16:47:22.745261",
+     "exception": false,
+     "start_time": "2024-06-27T16:47:22.725220",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.83982461599445"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "r2_score(y_test,y_pred)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [
+    {
+     "datasetId": 5294927,
+     "sourceId": 8804225,
+     "sourceType": "datasetVersion"
+    }
+   ],
+   "dockerImageVersionId": 30732,
+   "isGpuEnabled": false,
+   "isInternetEnabled": true,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.13"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 6.942604,
+   "end_time": "2024-06-27T16:47:23.374189",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2024-06-27T16:47:16.431585",
+   "version": "2.5.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
